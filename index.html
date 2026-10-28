@@ -589,7 +589,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             flex-shrink: 0;
         }
@@ -622,6 +622,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 19px;
         }
 
         /* 채팅방 내부 */
@@ -632,6 +633,13 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+        }
+
+        .chat-empty-hint {
+            margin: auto;
+            color: #636366;
+            font-size: 13.5px;
+            text-align: center;
         }
 
         .chat-bubble {
@@ -674,6 +682,8 @@
             color: #ffffff;
             font-size: 15px;
             outline: none;
+            user-select: text;
+            -webkit-user-select: text;
         }
 
         .chat-send-btn {
@@ -808,7 +818,7 @@
             color: #0a84ff;
         }
 
-        /* 통화중 오버레이 */
+        /* 통화중 오버레이 & 상단 나레이션 */
         #call-overlay {
             position: absolute;
             top: 0;
@@ -821,15 +831,40 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 90px 30px 70px;
+            padding: 110px 30px 70px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.35s ease;
         }
 
         #call-overlay.active {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        /* 통화 화면 상단 나레이션 박스 */
+        #call-narration {
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 7px 16px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.92);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            border: 0.5px solid rgba(255, 255, 255, 0.18);
+        }
+
+        #call-narration.show {
+            opacity: 1;
         }
 
         /* ================= 인스타그램 앱 ================= */
@@ -895,23 +930,20 @@
 <body>
 
     <div class="phone-frame">
-        <!-- 상단 상태바 (진짜 아이폰 신호, 와이파이, 배터리 아이콘) -->
+        <!-- 상단 상태바 -->
         <div class="status-bar">
             <span id="carrier-time">9:41</span>
             <div class="dynamic-island"></div>
             <div class="status-icons">
-                <!-- 셀룰러 4칸 바 -->
                 <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
                     <rect x="0" y="7.5" width="3" height="4.5" rx="1"/>
                     <rect x="4.5" y="5.5" width="3" height="6.5" rx="1"/>
                     <rect x="9" y="3" width="3" height="9" rx="1"/>
                     <rect x="13.5" y="0" width="3" height="12" rx="1"/>
                 </svg>
-                <!-- 와이파이 -->
                 <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
                     <path d="M8 9.2a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8zm-3.6-1.8a5.2 5.2 0 0 1 7.2 0l1.2-1.2a6.9 6.9 0 0 0-9.6 0l1.2 1.2zm-2.8-2.8a9.1 9.1 0 0 1 12.8 0l1.2-1.2a10.8 10.8 0 0 0-15.2 0l1.2 1.2z"/>
                 </svg>
-                <!-- 배터리 -->
                 <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
                     <rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="white" stroke-opacity="0.45"/>
                     <rect x="2" y="2" width="18" height="8" rx="1.8" fill="white"/>
@@ -940,10 +972,9 @@
                 <div class="notif-body">경감님, 떡볶이 먹으러 가실래요?</div>
             </div>
 
-            <!-- 하단 손전등(진짜 손전등 모양!) & 카메라 -->
+            <!-- 하단 손전등 & 카메라 -->
             <div class="lock-bottom-actions">
                 <button class="action-circle-btn" id="flashlight-btn" onclick="toggleFlashlight(event)">
-                    <!-- 실제 iOS 손전등(플래시라이트) 스틱 모양 아이콘 -->
                     <svg viewBox="0 0 24 24">
                         <path d="M7.5 2h9v2h-9V2zm0 3h9l-1.5 3.2v11.3c0 1.4-1.1 2.5-2.5 2.5h-1c-1.4 0-2.5-1.1-2.5-2.5V8.2L7.5 5zm4.5 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
                     </svg>
@@ -957,7 +988,7 @@
             <div class="swipe-up-text">위로 쓸어올려 열기</div>
         </div>
 
-        <!-- ================= 2. 비밀번호 화면 ================= -->
+        <!-- ================= 2. 비밀번호 화면 (0811) ================= -->
         <div id="passcode-screen" class="screen">
             <div class="passcode-title">비밀번호를 입력하세요</div>
             <div class="passcode-dots" id="dots-container">
@@ -986,7 +1017,7 @@
             </div>
         </div>
 
-        <!-- ================= 3. 홈 화면 (실제 아이폰 앱 그래픽) ================= -->
+        <!-- ================= 3. 홈 화면 ================= -->
         <div id="home-screen" class="screen ios-wallpaper">
             <div class="app-grid">
                 <!-- 메시지 -->
@@ -1000,7 +1031,7 @@
                     <span class="app-name">메시지</span>
                 </div>
 
-                <!-- 사진 (실제 iOS 8색 무지개 꽃잎 아이콘) -->
+                <!-- 사진 -->
                 <div class="app-item" onclick="openApp('photos')">
                     <div class="app-icon-wrap" style="background: #ffffff;">
                         <svg width="56" height="56" viewBox="0 0 100 100">
@@ -1019,7 +1050,7 @@
                     <span class="app-name">사진</span>
                 </div>
 
-                <!-- 메모 (실제 iOS 노란색 상단 메모패드 아이콘) -->
+                <!-- 메모 -->
                 <div class="app-item" onclick="openApp('notes')">
                     <div class="app-icon-wrap" style="background: #ffffff; flex-direction: column; justify-content: flex-start;">
                         <div style="width:100%; height:19px; background: linear-gradient(180deg, #ffd52e 0%, #f5b800 100%); border-bottom: 1.5px solid #d49b00;"></div>
@@ -1032,9 +1063,8 @@
                     <span class="app-name">메모</span>
                 </div>
 
-                <!-- Instagram (실제 인스타그램 그라데이션 & 카메라) -->
+                <!-- Instagram -->
                 <div class="app-item" onclick="openApp('instagram')">
-                    <span class="app-badge">2</span>
                     <div class="app-icon-wrap" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
                         <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                             <rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/>
@@ -1045,11 +1075,11 @@
                     <span class="app-name">Instagram</span>
                 </div>
 
-                <!-- 설정 (실제 iOS 메탈 기어 아이콘) -->
+                <!-- 설정 -->
                 <div class="app-item" onclick="openApp('settings')">
                     <div class="app-icon-wrap" style="background: linear-gradient(180deg, #b8b9be 0%, #6e7075 100%);">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="#2c2c2e">
-                            <path fill="#ffffff" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="#ffffff">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
                         </svg>
                     </div>
                     <span class="app-name">설정</span>
@@ -1068,7 +1098,6 @@
 
             <!-- 하단 독(Dock) 바 -->
             <div class="dock">
-                <!-- 전화 -->
                 <div class="app-item" onclick="openApp('phone')">
                     <div class="app-icon-wrap" style="width:58px; height:58px; background: linear-gradient(180deg, #62f776 0%, #1dc432 100%);">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
@@ -1076,7 +1105,6 @@
                         </svg>
                     </div>
                 </div>
-                <!-- 메시지 -->
                 <div class="app-item" onclick="openApp('messages')">
                     <div class="app-icon-wrap" style="width:58px; height:58px; background: linear-gradient(180deg, #62f776 0%, #1dc432 100%);">
                         <svg width="34" height="34" viewBox="0 0 24 24" fill="white">
@@ -1084,7 +1112,6 @@
                         </svg>
                     </div>
                 </div>
-                <!-- Instagram -->
                 <div class="app-item" onclick="openApp('instagram')">
                     <div class="app-icon-wrap" style="width:58px; height:58px; background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
                         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -1094,7 +1121,6 @@
                         </svg>
                     </div>
                 </div>
-                <!-- 설정 -->
                 <div class="app-item" onclick="openApp('settings')">
                     <div class="app-icon-wrap" style="width:58px; height:58px; background: linear-gradient(180deg, #b8b9be 0%, #6e7075 100%);">
                         <svg width="38" height="38" viewBox="0 0 24 24" fill="white">
@@ -1105,9 +1131,8 @@
             </div>
         </div>
 
-        <!-- ================= 앱 1: 메시지 (대화 목록 -> 클릭 시 채팅방) ================= -->
+        <!-- ================= 앱 1: 메시지 (목록 -> 클릭 시 채팅방) ================= -->
         <div id="app-messages" class="app-modal">
-            <!-- 1단계: 메시지 목록 화면 -->
             <div class="sub-view" id="msg-list-view">
                 <div class="msg-list-header">
                     <div class="msg-list-top">
@@ -1132,6 +1157,19 @@
                         </div>
                     </div>
 
+                    <!-- 영은수 검사님 -->
+                    <div class="msg-row" onclick="openChatRoom('eunsoo')">
+                        <div class="unread-dot read"></div>
+                        <div class="msg-avatar" style="background: linear-gradient(135deg, #a855f7, #6366f1);">은수</div>
+                        <div class="msg-info">
+                            <div class="msg-info-top">
+                                <span class="msg-name">영은수 검사님</span>
+                                <span class="msg-date">›</span>
+                            </div>
+                            <div class="msg-preview" id="preview-eunsoo"></div>
+                        </div>
+                    </div>
+
                     <!-- 황시목 검사 -->
                     <div class="msg-row" onclick="openChatRoom('shimok')">
                         <div class="unread-dot read"></div>
@@ -1139,9 +1177,9 @@
                         <div class="msg-info">
                             <div class="msg-info-top">
                                 <span class="msg-name">황시목 검사</span>
-                                <span class="msg-date">어제 ›</span>
+                                <span class="msg-date">›</span>
                             </div>
-                            <div class="msg-preview">영장 발부됐습니다. 서부지검으로 오시죠.</div>
+                            <div class="msg-preview" id="preview-shimok"></div>
                         </div>
                     </div>
 
@@ -1152,9 +1190,9 @@
                         <div class="msg-info">
                             <div class="msg-info-top">
                                 <span class="msg-name">장건 형사</span>
-                                <span class="msg-date">화요일 ›</span>
+                                <span class="msg-date">›</span>
                             </div>
-                            <div class="msg-preview">팀장님! 용의자 차량 블랙박스 확보했습니다!!</div>
+                            <div class="msg-preview" id="preview-jang"></div>
                         </div>
                     </div>
 
@@ -1165,15 +1203,15 @@
                         <div class="msg-info">
                             <div class="msg-info-top">
                                 <span class="msg-name">서동재 검사</span>
-                                <span class="msg-date">월요일 ›</span>
+                                <span class="msg-date">›</span>
                             </div>
-                            <div class="msg-preview">우리 한 경감님~ 이번 사건 브리핑 말인데 ㅎㅎ</div>
+                            <div class="msg-preview" id="preview-dongjae"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2단계: 개별 채팅방 화면 -->
+            <!-- 개별 채팅방 화면 -->
             <div class="sub-view slide-right" id="msg-detail-view">
                 <div class="ios-nav-bar">
                     <button class="ios-back-btn" onclick="backToMsgList()">‹ 메시지</button>
@@ -1210,35 +1248,20 @@
             </div>
         </div>
 
-        <!-- ================= 앱 3: 메모 ================= -->
+        <!-- ================= 앱 3: 메모 (비어있음) ================= -->
         <div id="app-notes" class="app-modal">
             <div class="ios-nav-bar">
                 <span style="color:#ff9f0a; font-size:16px;">폴더</span>
-                <span class="ios-nav-title">한여진의 메모</span>
+                <span class="ios-nav-title">메모</span>
                 <button class="ios-back-btn" style="color:#ff9f0a;" onclick="closeApp('notes')">완료</button>
             </div>
-            <div style="flex:1; overflow-y:auto; padding:20px;">
-                <div style="background:#1c1c1e; padding:16px; border-radius:14px; margin-bottom:14px; border-left:4px solid #ff9f0a;">
-                    <h3 style="font-size:16px; color:#ff9f0a; margin-bottom:6px;">📌 이은빈 검사님 공조 수사 체크리스트</h3>
-                    <p style="font-size:14px; color:#d1d1d6; line-height:1.5;">
-                        1. 대포폰 기지국 위치 추적 내역 전달 완료<br>
-                        2. 저녁에 서부지검 앞 신당동 떡볶이집 가기 (이은빈 검사님 픽!)<br>
-                        3. 3차 공판 참고인 신변보호 요청서 결재
-                    </p>
-                </div>
-                <div style="background:#1c1c1e; padding:16px; border-radius:14px; margin-bottom:14px; border-left:4px solid #ff9f0a;">
-                    <h3 style="font-size:16px; color:#ff9f0a; margin-bottom:6px;">🚓 용산서 강력3팀 주간 일정</h3>
-                    <p style="font-size:14px; color:#d1d1d6; line-height:1.5;">
-                        - 화요일: 현장 감식 보고서 취합 (장건 형사)<br>
-                        - 목요일: 서부지검 합동 회의 참석
-                    </p>
-                </div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#636366;">
+                <div style="font-size:18px; font-weight:500;">메모 없음</div>
             </div>
         </div>
 
-        <!-- ================= 앱 4: 설정 (실제 애플 설정 UI + 하위 메뉴 클릭 가능) ================= -->
+        <!-- ================= 앱 4: 설정 ================= -->
         <div id="app-settings" class="app-modal">
-            <!-- 설정 메인 리스트 -->
             <div class="sub-view" id="settings-main-view">
                 <div class="msg-list-header">
                     <div class="msg-list-top">
@@ -1250,7 +1273,6 @@
                 </div>
 
                 <div class="settings-scroll">
-                    <!-- 한여진 Apple ID 프로필 카드 -->
                     <div class="settings-group" style="margin-top:12px;">
                         <div class="settings-row" onclick="openSettingDetail('profile')" style="padding:14px;">
                             <div style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, #6366f1); display:flex; justify-content:center; align-items:center; font-size:22px; font-weight:700;">여진</div>
@@ -1262,7 +1284,6 @@
                         </div>
                     </div>
 
-                    <!-- 네트워크 그룹 -->
                     <div class="settings-group">
                         <div class="settings-row">
                             <div class="set-icon" style="background:#ff9500;">✈️</div>
@@ -1289,7 +1310,6 @@
                         </div>
                     </div>
 
-                    <!-- 알림 & 사운드 그룹 -->
                     <div class="settings-group">
                         <div class="settings-row" onclick="openSettingDetail('notif')">
                             <div class="set-icon" style="background:#ff3b30;">🔔</div>
@@ -1304,12 +1324,11 @@
                         <div class="settings-row" onclick="openSettingDetail('focus')">
                             <div class="set-icon" style="background:#5856d6;">🌙</div>
                             <span class="set-label">집중 모드</span>
-                            <span class="set-value">잠복 수사</span>
+                            <span class="set-value">업무</span>
                             <span class="chevron">›</span>
                         </div>
                     </div>
 
-                    <!-- 일반 / 배터리 / 암호 -->
                     <div class="settings-group">
                         <div class="settings-row" onclick="openSettingDetail('general')">
                             <div class="set-icon" style="background:#8e8e93;">⚙️</div>
@@ -1342,7 +1361,7 @@
             </div>
         </div>
 
-        <!-- ================= 앱 5: 전화 (최근 기록 / 연락처 / 키패드) ================= -->
+        <!-- ================= 앱 5: 전화 ================= -->
         <div id="app-phone" class="app-modal">
             <div class="ios-nav-bar">
                 <span style="width:40px;"></span>
@@ -1359,6 +1378,13 @@
                     </div>
                     <span style="font-size:14px; color:#8e8e93;">오후 6:12 ⓘ</span>
                 </div>
+                <div class="msg-row" onclick="startCall('영은수 검사님')">
+                    <div style="flex:1;">
+                        <div style="font-size:16px; font-weight:600; color:#ffffff;">영은수 검사님</div>
+                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 수신</div>
+                    </div>
+                    <span style="font-size:14px; color:#8e8e93;">오후 5:30 ⓘ</span>
+                </div>
                 <div class="msg-row" onclick="startCall('서동재 검사')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ff3b30;">서동재 검사 (3)</div>
@@ -1369,7 +1395,7 @@
                 <div class="msg-row" onclick="startCall('황시목 검사')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ffffff;">황시목 검사</div>
-                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 수신 (12분)</div>
+                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 수신</div>
                     </div>
                     <span style="font-size:14px; color:#8e8e93;">어제 ⓘ</span>
                 </div>
@@ -1405,19 +1431,22 @@
             </div>
 
             <div class="phone-tabs">
-                <div class="phone-tab-item" id="tab-recents" onclick="switchPhoneTab('recents')">🕒<span>최근 기록</span></div>
+                <div class="phone-tab-item active" id="tab-recents" onclick="switchPhoneTab('recents')">🕒<span>최근 기록</span></div>
                 <div class="phone-tab-item" id="tab-keypad" onclick="switchPhoneTab('keypad')">🔢<span>키패드</span></div>
             </div>
         </div>
 
         <!-- 통화 연결 화면 오버레이 -->
         <div id="call-overlay">
+            <!-- 상단 나레이션 자막 -->
+            <div id="call-narration"></div>
+
             <div style="text-align:center;">
-                <div style="font-size:15px; color:#94a3b8; margin-bottom:6px;">통화 연결 중...</div>
+                <div style="font-size:15px; color:#94a3b8; margin-bottom:6px;" id="call-status-text">통화 연결 중...</div>
                 <div style="font-size:32px; font-weight:600;" id="calling-name">이은빈 검사님</div>
             </div>
             <button onclick="endCall()" style="width:74px; height:74px; border-radius:50%; background:#ff3b30; border:none; display:flex; justify-content:center; align-items:center; cursor:pointer;">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1-.29-.7c0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1-.29-.7c0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11-.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
             </button>
         </div>
 
@@ -1429,7 +1458,6 @@
             </div>
 
             <div style="flex:1; overflow-y:auto; background:#000000;">
-                <!-- 한여진 프로필 헤더 요약 -->
                 <div style="display:flex; align-items:center; padding:16px; gap:18px; border-bottom:0.5px solid #262626;">
                     <div class="ig-avatar-ring" style="width:68px; height:68px;">
                         <div class="ig-avatar-inner" style="font-size:22px; font-weight:700;">여진</div>
@@ -1438,40 +1466,14 @@
                         <div style="font-size:16px; font-weight:700; margin-bottom:4px;">han_yeojin_police</div>
                         <div style="font-size:13px; color:#a8a8a8;">한여진 | 서울용산경찰서 경감 🚓</div>
                         <div style="display:flex; gap:16px; margin-top:8px; font-size:13px;">
-                            <span>게시물 <b>14</b></span>
+                            <span>게시물 <b>1</b></span>
                             <span>팔로워 <b>842</b></span>
                             <span>팔로잉 <b>129</b></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 피드 게시물 1: 이은빈 검사님 -->
-                <div class="ig-post">
-                    <div class="ig-post-header">
-                        <div class="ig-avatar-ring"><div class="ig-avatar-inner">은빈</div></div>
-                        <div style="flex:1;">
-                            <div style="font-size:14px; font-weight:600;">eunbin_prosecutor</div>
-                            <div style="font-size:11px; color:#8e8e93;">서울서부지방검찰청</div>
-                        </div>
-                    </div>
-                    <div style="width:100%; height:240px; background:linear-gradient(135deg, #312e81, #be185d); display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; text-align:center;">
-                        <div style="font-size:48px; margin-bottom:10px;">🍢🔥⚖️</div>
-                        <div style="font-size:16px; font-weight:600;">공판 준비 끝!! 오늘 저녁은 무조건 즉석떡볶이</div>
-                    </div>
-                    <div style="padding:12px 14px 0;">
-                        <div style="display:flex; gap:14px; font-size:22px; margin-bottom:8px;">
-                            <span style="cursor:pointer;" onclick="toggleLike(this)">❤️</span>
-                            <span>💬</span>
-                            <span>✈️</span>
-                        </div>
-                        <div style="font-size:13.5px; line-height:1.45;">
-                            <b>eunbin_prosecutor</b> 한여진 경감님이랑 수사 공조 끝나고 떡볶이 먹기로 한 날!! 빨리 퇴근하세요 경감님 🙌<br>
-                            <span style="color:#a8a8a8;">└ <b>han_yeojin_police</b> 지금 차 키 챙겼습니다 검사님! 15분 내로 도착합니다 🚓💨</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 피드 게시물 2: 한여진 경감 -->
+                <!-- 피드 게시물: 한여진 경감 -->
                 <div class="ig-post">
                     <div class="ig-post-header">
                         <div class="ig-avatar-ring"><div class="ig-avatar-inner">여진</div></div>
@@ -1490,8 +1492,7 @@
                             <span>💬</span>
                         </div>
                         <div style="font-size:13.5px; line-height:1.45;">
-                            <b>han_yeojin_police</b> 끝까지 추적한다.<br>
-                            <span style="color:#a8a8a8;">└ <b>eunbin_prosecutor</b> 역시 믿고 보는 한 경감님 최고예요 👍❤️</span>
+                            <b>han_yeojin_police</b> 끝까지 추적한다.
                         </div>
                     </div>
                 </div>
@@ -1556,7 +1557,7 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // 손전등 버튼: 배경 변화 없이 손전등 동그라미 버튼만 하얗게 토글
+        // 손전등 버튼: 동그라미만 하얗게 토글
         function toggleFlashlight(e) {
             e.stopPropagation();
             playSound('click');
@@ -1587,9 +1588,9 @@
             updateDots();
         }
 
-        // 비밀번호 입력 (1121)
+        // 비밀번호 입력 (0811)
         let enteredPin = "";
-        const correctPin = "1121";
+        const correctPin = "0811";
 
         function pressKey(num) {
             playSound('click');
@@ -1641,36 +1642,29 @@
             document.querySelectorAll('.app-modal').forEach(m => m.classList.remove('open'));
         }
 
-        // ================= 메시지 데이터 및 채팅방 이동 =================
+        // ================= 메시지 데이터 (이은빈 떡볶이 문자 외 모두 비움 + 영은수 추가) =================
         const chatData = {
             eunbin: {
                 name: "이은빈 검사님",
                 messages: [
-                    { sender: "them", text: "한 경감님! 보내주신 수사 기록 잘 받았습니다." },
-                    { sender: "me", text: "네 검사님, 추가 증거물도 곧 서부지검으로 넘기겠습니다." },
                     { sender: "them", text: "경감님, 떡볶이 먹으러 가실래요?" }
                 ]
             },
+            eunsoo: {
+                name: "영은수 검사님",
+                messages: []
+            },
             shimok: {
                 name: "황시목 검사",
-                messages: [
-                    { sender: "me", text: "황 검사님, 압수수색 영장 언제쯤 나올까요?" },
-                    { sender: "them", text: "영장 발부됐습니다. 서부지검으로 오시죠." }
-                ]
+                messages: []
             },
             jang: {
                 name: "장건 형사",
-                messages: [
-                    { sender: "them", text: "팀장님! 용의자 차량 블랙박스 확보했습니다!!" },
-                    { sender: "me", text: "고생했어! 복구팀에 바로 넘기고 사무실에서 보자." }
-                ]
+                messages: []
             },
             dongjae: {
                 name: "서동재 검사",
-                messages: [
-                    { sender: "them", text: "우리 한 경감님~ 이번 사건 브리핑 말인데 ㅎㅎ" },
-                    { sender: "them", text: "나한테만 살짝 귀띔해 주시면 안 될까?" }
-                ]
+                messages: []
             }
         };
 
@@ -1699,7 +1693,15 @@
         function renderChatMessages() {
             const box = document.getElementById('chat-messages-box');
             box.innerHTML = '';
-            chatData[currentChatKey].messages.forEach(m => {
+            const msgs = chatData[currentChatKey].messages;
+            if (msgs.length === 0) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'chat-empty-hint';
+                emptyDiv.innerText = '메시지를 입력하여 대화를 시작하세요.';
+                box.appendChild(emptyDiv);
+                return;
+            }
+            msgs.forEach(m => {
                 const div = document.createElement('div');
                 div.className = `chat-bubble ${m.sender === 'me' ? 'sent' : 'received'}`;
                 div.innerText = m.text;
@@ -1714,14 +1716,13 @@
             if (!text) return;
             playSound('click');
             chatData[currentChatKey].messages.push({ sender: 'me', text: text });
-            if (currentChatKey === 'eunbin') {
-                document.getElementById('preview-eunbin').innerText = text;
-            }
+            const previewEl = document.getElementById(`preview-${currentChatKey}`);
+            if (previewEl) previewEl.innerText = text;
             input.value = '';
             renderChatMessages();
         }
 
-        // ================= 설정 앱 인터랙션 =================
+        // ================= 설정 앱 인터랙션 (이은빈 관련 문구 제거) =================
         function toggleSwitch(el) {
             playSound('click');
             el.classList.toggle('on');
@@ -1752,8 +1753,8 @@
                     </div>
                     <div style="font-size:13px; color:#8e8e93; margin:0 10px 8px;">기타 네트워크</div>
                     <div class="settings-group">
-                        <div class="settings-row"><span class="set-label">서부지검_검사실_Guest</span><span class="set-value">🔒 📶</span></div>
-                        <div class="settings-row"><span class="set-label">IPTIME_Investigation</span><span class="set-value">🔒 📶</span></div>
+                        <div class="settings-row"><span class="set-label">Public_WiFi</span><span class="set-value">🔒 📶</span></div>
+                        <div class="settings-row"><span class="set-label">IPTIME_5G</span><span class="set-value">🔒 📶</span></div>
                     </div>
                 `
             },
@@ -1766,7 +1767,7 @@
                     <div style="font-size:13px; color:#8e8e93; margin:0 10px 8px;">나의 기기</div>
                     <div class="settings-group">
                         <div class="settings-row"><span class="set-label">한여진의 AirPods Pro</span><span class="set-value">연결됨 ⓘ</span></div>
-                        <div class="settings-row"><span class="set-label">수사 차량 CarPlay</span><span class="set-value">연결 안 됨 ⓘ</span></div>
+                        <div class="settings-row"><span class="set-label">CarPlay</span><span class="set-value">연결 안 됨 ⓘ</span></div>
                     </div>
                 `
             },
@@ -1784,7 +1785,7 @@
                 html: `
                     <div class="settings-group">
                         <div class="settings-row"><span class="set-label">표시 형식</span><span class="set-value">스택</span></div>
-                        <div class="settings-row"><span class="set-label">메시지 알림 (이은빈 검사님 최우선)</span><span class="set-value">켜짐</span></div>
+                        <div class="settings-row"><span class="set-label">미리보기 표시</span><span class="set-value">잠겨있지 않을 때</span></div>
                     </div>
                 `
             },
@@ -1803,7 +1804,7 @@
                 html: `
                     <div class="settings-group">
                         <div class="settings-row"><span class="set-label">🌙 방해 금지 모드</span><div class="ios-switch" onclick="toggleSwitch(this)"></div></div>
-                        <div class="settings-row"><span class="set-label">🚓 잠복 수사 모드 (이은빈 검사님만 허용)</span><div class="ios-switch on" onclick="toggleSwitch(this)"></div></div>
+                        <div class="settings-row"><span class="set-label">💼 업무 모드</span><div class="ios-switch on" onclick="toggleSwitch(this)"></div></div>
                     </div>
                 `
             },
@@ -1833,7 +1834,7 @@
                 html: `
                     <div class="settings-group">
                         <div class="settings-row"><span class="set-label">iPhone 잠금 해제</span><div class="ios-switch on" onclick="toggleSwitch(this)"></div></div>
-                        <div class="settings-row"><span class="set-label">현재 설정된 암호</span><span class="set-value">1121</span></div>
+                        <div class="settings-row"><span class="set-label">암호 변경</span><span class="chevron">›</span></div>
                     </div>
                 `
             }
@@ -1852,12 +1853,26 @@
             document.getElementById('settings-detail-view').classList.add('slide-right');
         }
 
-        // ================= 전화 앱 기능 =================
+        // ================= 전화 앱 & 이은빈 검사님 통화 연출 =================
+        let callTimeouts = [];
+        let callTimerInterval = null;
+
+        function clearCallTimers() {
+            callTimeouts.forEach(t => clearTimeout(t));
+            callTimeouts = [];
+            if (callTimerInterval) {
+                clearInterval(callTimerInterval);
+                callTimerInterval = null;
+            }
+        }
+
         function switchPhoneTab(tab) {
             playSound('click');
             document.getElementById('phone-recents-view').style.display = tab === 'recents' ? 'block' : 'none';
             document.getElementById('phone-keypad-view').style.display = tab === 'keypad' ? 'flex' : 'none';
             document.getElementById('phone-header-title').innerText = tab === 'recents' ? '최근 기록' : '키패드';
+            document.getElementById('tab-recents').classList.toggle('active', tab === 'recents');
+            document.getElementById('tab-keypad').classList.toggle('active', tab === 'keypad');
         }
 
         function dialNum(n) {
@@ -1867,14 +1882,60 @@
         }
 
         function startCall(name) {
+            clearCallTimers();
             playSound('unlock');
+
+            const statusEl = document.getElementById('call-status-text');
+            const narrationEl = document.getElementById('call-narration');
             document.getElementById('calling-name').innerText = name;
+            statusEl.innerText = "통화 연결 중...";
+            narrationEl.classList.remove('show');
+            narrationEl.innerText = "";
+
             document.getElementById('call-overlay').classList.add('active');
+
+            // 이은빈 검사님에게 걸었을 때 연출 (3초 뒤 수신 -> 나레이션 2줄 느리게 -> 5초 뒤 종료)
+            if (name.includes('이은빈')) {
+                // 3초 뒤 전화 받음
+                callTimeouts.push(setTimeout(() => {
+                    playSound('click');
+                    let sec = 0;
+                    statusEl.innerText = "00:00";
+                    callTimerInterval = setInterval(() => {
+                        sec++;
+                        statusEl.innerText = `00:${String(sec).padStart(2, '0')}`;
+                    }, 1000);
+
+                    // 첫 번째 나레이션: “… 여보세요?”
+                    narrationEl.innerText = "“… 여보세요?”";
+                    narrationEl.classList.add('show');
+
+                    // 느리게 두 번째 나레이션으로 전환
+                    callTimeouts.push(setTimeout(() => {
+                        narrationEl.classList.remove('show');
+                        callTimeouts.push(setTimeout(() => {
+                            narrationEl.innerText = "“…… 경감님, 무슨 일이세요?”";
+                            narrationEl.classList.add('show');
+                        }, 600));
+                    }, 2000));
+
+                    // 통화 연결된 지 5초 뒤 자동으로 끊김
+                    callTimeouts.push(setTimeout(() => {
+                        endCall();
+                    }, 5000));
+                }, 3000));
+            }
         }
 
         function endCall() {
+            clearCallTimers();
             playSound('error');
-            document.getElementById('call-overlay').classList.remove('active');
+            const narrationEl = document.getElementById('call-narration');
+            narrationEl.classList.remove('show');
+            document.getElementById('call-status-text').innerText = "통화 종료";
+            setTimeout(() => {
+                document.getElementById('call-overlay').classList.remove('active');
+            }, 400);
         }
 
         // ================= 인스타그램 하트 토글 =================
