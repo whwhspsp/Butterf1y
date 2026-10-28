@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Phone</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 아이폰 프레임 */
+        .phone-mockup {
+            width: 100%;
+            max-width: 380px;
+            height: 720px;
+            background: #000000;
+            border-radius: 48px;
+            border: 12px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 다이내믹 아일랜드 / 노치 */
+        .dynamic-island {
+            width: 110px;
+            height: 28px;
+            background: #000000;
+            border-radius: 20px;
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        /* 아이폰 화면 내부 */
+        .screen-content {
+            flex: 1;
+            padding: 60px 24px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+            overflow-y: auto;
+        }
+
+        /* 프로필 이미지 */
+        .profile-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #6366f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .bio {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        /* 버튼 목록 */
+        .links {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-btn {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            color: #ffffff;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .link-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* 하단 홈 바 */
+        .home-bar {
+            width: 120px;
+            height: 4px;
+            background: #ffffff;
+            border-radius: 2px;
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+        <!-- 다이내믹 아일랜드 -->
+        <div class="dynamic-island"></div>
+
+        <!-- 아이폰 화면 내용 -->
+        <div class="screen-content">
+            <div class="profile-img">📱</div>
+            <h1>은빈의 프로필</h1>
+            <p class="bio">안녕하세요! 아이패드로 직접 만든 웹사이트입니다.</p>
+
+            <div class="links">
+                <a href="https://instagram.com" class="link-btn" target="_blank">📸 인스타그램</a>
+                <a href="https://youtube.com" class="link-btn" target="_blank">🎬 유튜브</a>
+                <a href="mailto:example@email.com" class="link-btn">✉️ 이메일 보내기</a>
+            </div>
+        </div>
+
+        <!-- 하단 홈 바 -->
+        <div class="home-bar"></div>
+    </div>
+
+</body>
+</html>
