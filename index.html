@@ -1090,7 +1090,7 @@
         <!-- 상단 상태바 -->
         <div class="status-bar">
             <span id="carrier-time">9:41</span>
-            <div class="dynamic-island"></div>
+            <div class="dynamic-island" onclick="tapDynamicIsland()" style="cursor:pointer;"></div>
             <div class="status-icons">
                 <svg width="17" height="12" viewBox="0 0 17 12" fill="white">
                     <rect x="0" y="7.5" width="3" height="4.5" rx="1"/>
@@ -2037,6 +2037,87 @@
         }
         setInterval(updateTime, 1000);
         updateTime();
+
+        // ================= 잠금화면으로 복귀 (위에서 아래로 스와이프) =================
+        function tapDynamicIsland() {
+            const lockScreen = document.getElementById('lock-screen');
+            if (lockScreen && lockScreen.style.transform.includes('-100%')) {
+                lockPhone();
+            }
+        }
+
+        function lockPhone() {
+            playSound('click');
+            // 열려있는 모든 앱 닫기
+            document.querySelectorAll('.app-modal').forEach(m => m.classList.remove('open'));
+            // 홈 화면 비활성화
+            document.getElementById('home-screen').classList.remove('active');
+            // 패스코드 화면 비활성화 및 입력 초기화
+            document.getElementById('passcode-screen').classList.remove('active');
+            enteredPin = "";
+            updateDots();
+            // 서브 뷰들 위치 리셋
+            const subviews = [
+                'notes-detail-view', 'insta-detail-view', 'insta-post-view',
+                'photo-viewer-view', 'msg-detail-view', 'settings-detail-view'
+            ];
+            subviews.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('slide-right');
+            });
+            // 잠금화면 다시 내려오기
+            const lockScreen = document.getElementById('lock-screen');
+            lockScreen.style.transform = 'translateY(0)';
+        }
+
+        let swipeStartY = 0;
+        let swipeStartX = 0;
+
+        const phoneFrameEl = document.querySelector('.phone-frame');
+
+        phoneFrameEl.addEventListener('touchstart', (e) => {
+            swipeStartX = e.touches[0].clientX;
+            swipeStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        phoneFrameEl.addEventListener('touchend', (e) => {
+            const deltaY = e.changedTouches[0].clientY - swipeStartY;
+            const deltaX = e.changedTouches[0].clientX - swipeStartX;
+            checkSwipeDownToLock(deltaX, deltaY, e.target);
+        }, { passive: true });
+
+        phoneFrameEl.addEventListener('mousedown', (e) => {
+            swipeStartX = e.clientX;
+            swipeStartY = e.clientY;
+        });
+
+        phoneFrameEl.addEventListener('mouseup', (e) => {
+            const deltaY = e.clientY - swipeStartY;
+            const deltaX = e.clientX - swipeStartX;
+            checkSwipeDownToLock(deltaX, deltaY, e.target);
+        });
+
+        function checkSwipeDownToLock(deltaX, deltaY, target) {
+            const lockScreen = document.getElementById('lock-screen');
+            const isUnlocked = lockScreen.style.transform === 'translateY(-100%)';
+            if (!isUnlocked) return;
+
+            // 위에서 아래로 45px 이상 스와이프하고 수직 각도가 뚜렷할 때
+            if (deltaY > 45 && Math.abs(deltaY) > Math.abs(deltaX) * 1.1) {
+                const isHomeScreen = document.getElementById('home-screen').classList.contains('active') && !document.querySelector('.app-modal.open');
+                const isFromTopArea = swipeStartY < 120; // 상단 120px 이내에서 시작
+
+                let isAtScrollTop = true;
+                let scrollParent = target ? target.closest('.chat-scroll, .settings-scroll, #phone-recents-view, div[style*="overflow-y:auto"]') : null;
+                if (scrollParent && scrollParent.scrollTop > 10) {
+                    isAtScrollTop = false;
+                }
+
+                if (isHomeScreen || isFromTopArea || isAtScrollTop) {
+                    lockPhone();
+                }
+            }
+        }
 
         // 손전등 버튼
         function toggleFlashlight(e) {
