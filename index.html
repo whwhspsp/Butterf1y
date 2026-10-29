@@ -700,7 +700,7 @@
             align-items: center;
         }
 
-        /* ================= 설정 앱 (실제 iOS 설정 스타일) ================= */
+        /* ================= 설정 앱 ================= */
         .settings-scroll {
             flex: 1;
             overflow-y: auto;
@@ -831,7 +831,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 110px 30px 70px;
+            padding: 115px 30px 70px;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.35s ease;
@@ -848,23 +848,223 @@
             top: 56px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 7px 16px;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.13);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 8px 18px;
+            border-radius: 18px;
             font-size: 13.5px;
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.92);
-            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.2px;
             white-space: nowrap;
             opacity: 0;
-            transition: opacity 0.8s ease;
-            border: 0.5px solid rgba(255, 255, 255, 0.18);
+            transition: opacity 0.7s ease;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
         }
 
         #call-narration.show {
             opacity: 1;
+        }
+
+        /* ================= 카메라 앱 (현실 아이폰 인터페이스) ================= */
+        .cam-top-bar {
+            padding: 52px 22px 14px;
+            background: #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .cam-top-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .cam-viewfinder {
+            flex: 1;
+            background: #000000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 3x3 카메라 격자 가이드라인 */
+        .cam-grid-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
+            background-size: 33.33% 33.33%;
+        }
+
+        /* 중앙 다람쥐 피사체 */
+        .cam-subject {
+            font-size: 104px;
+            transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 2;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6));
+        }
+
+        /* 초점 노란색 박스 */
+        .cam-focus-box {
+            position: absolute;
+            width: 82px;
+            height: 82px;
+            border: 1.2px solid #ffcc00;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.85;
+            transition: transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        /* 셔터 깜빡임 모션 오버레이 */
+        .cam-shutter-flash {
+            position: absolute;
+            inset: 0;
+            background: #000000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .cam-shutter-flash.flash-anim {
+            animation: shutterBlink 0.26s ease-out;
+        }
+
+        @keyframes shutterBlink {
+            0% { opacity: 1; background: #000000; }
+            40% { opacity: 0.85; background: #ffffff; }
+            100% { opacity: 0; }
+        }
+
+        /* 줌 배율 버튼들 */
+        .cam-zoom-bar {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(28, 28, 30, 0.75);
+            padding: 4px 6px;
+            border-radius: 20px;
+            z-index: 5;
+        }
+
+        .cam-zoom-pill {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .cam-zoom-pill.active {
+            color: #ffcc00;
+            background: rgba(0,0,0,0.65);
+            transform: scale(1.08);
+        }
+
+        /* 카메라 하단 컨트롤 영역 */
+        .cam-bottom-panel {
+            background: #000000;
+            padding: 12px 24px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            z-index: 10;
+        }
+
+        .cam-modes {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .cam-modes span.active {
+            color: #ffcc00;
+        }
+
+        .cam-shutter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+        }
+
+        .cam-thumb-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #1c1c1e;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .cam-shutter-outer {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .cam-shutter-inner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ffffff;
+            transition: transform 0.12s ease, background 0.12s ease;
+        }
+
+        .cam-shutter-outer:active .cam-shutter-inner {
+            transform: scale(0.86);
+            background: #d1d1d6;
+        }
+
+        .cam-flip-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.14);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         /* ================= 인스타그램 앱 ================= */
@@ -979,7 +1179,7 @@
                         <path d="M7.5 2h9v2h-9V2zm0 3h9l-1.5 3.2v11.3c0 1.4-1.1 2.5-2.5 2.5h-1c-1.4 0-2.5-1.1-2.5-2.5V8.2L7.5 5zm4.5 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
                     </svg>
                 </button>
-                <button class="action-circle-btn" onclick="playSound('click')">
+                <button class="action-circle-btn" onclick="openCameraFromLock(event)">
                     <svg viewBox="0 0 24 24">
                         <path d="M9.4 4l-1.4 2H5C3.3 6 2 7.3 2 9v9c0 1.7 1.3 3 3 3h14c1.7 0 3-1.3 3-3V9c0-1.7-1.3-3-3-3h-3l-1.4-2H9.4zm2.6 12.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
                     </svg>
@@ -1050,6 +1250,17 @@
                     <span class="app-name">사진</span>
                 </div>
 
+                <!-- 카메라 (실제 iOS 카메라 앱 아이콘) -->
+                <div class="app-item" onclick="openApp('camera')">
+                    <div class="app-icon-wrap" style="background: linear-gradient(180deg, #e5e5ea 0%, #8e8e93 100%);">
+                        <svg width="42" height="42" viewBox="0 0 24 24" fill="#1c1c1e">
+                            <path d="M9.4 4l-1.4 2H5C3.3 6 2 7.3 2 9v9c0 1.7 1.3 3 3 3h14c1.7 0 3-1.3 3-3V9c0-1.7-1.3-3-3-3h-3l-1.4-2H9.4zm2.6 12.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
+                            <circle cx="17.5" cy="9.5" r="1" fill="#ffcc00"/>
+                        </svg>
+                    </div>
+                    <span class="app-name">카메라</span>
+                </div>
+
                 <!-- 메모 -->
                 <div class="app-item" onclick="openApp('notes')">
                     <div class="app-icon-wrap" style="background: #ffffff; flex-direction: column; justify-content: flex-start;">
@@ -1112,12 +1323,10 @@
                         </svg>
                     </div>
                 </div>
-                <div class="app-item" onclick="openApp('instagram')">
-                    <div class="app-icon-wrap" style="width:58px; height:58px; background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
-                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/>
-                            <circle cx="12" cy="12" r="4.2"/>
-                            <circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/>
+                <div class="app-item" onclick="openApp('camera')">
+                    <div class="app-icon-wrap" style="width:58px; height:58px; background: linear-gradient(180deg, #e5e5ea 0%, #8e8e93 100%);">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="#1c1c1e">
+                            <path d="M9.4 4l-1.4 2H5C3.3 6 2 7.3 2 9v9c0 1.7 1.3 3 3 3h14c1.7 0 3-1.3 3-3V9c0-1.7-1.3-3-3-3h-3l-1.4-2H9.4zm2.6 12.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
                         </svg>
                     </div>
                 </div>
@@ -1131,7 +1340,7 @@
             </div>
         </div>
 
-        <!-- ================= 앱 1: 메시지 (목록 -> 클릭 시 채팅방) ================= -->
+        <!-- ================= 앱 1: 메시지 (영은수 검사님 맨 아래 배치) ================= -->
         <div id="app-messages" class="app-modal">
             <div class="sub-view" id="msg-list-view">
                 <div class="msg-list-header">
@@ -1154,19 +1363,6 @@
                                 <span class="msg-date">방금 ›</span>
                             </div>
                             <div class="msg-preview" id="preview-eunbin">경감님, 떡볶이 먹으러 가실래요?</div>
-                        </div>
-                    </div>
-
-                    <!-- 영은수 검사님 -->
-                    <div class="msg-row" onclick="openChatRoom('eunsoo')">
-                        <div class="unread-dot read"></div>
-                        <div class="msg-avatar" style="background: linear-gradient(135deg, #a855f7, #6366f1);">은수</div>
-                        <div class="msg-info">
-                            <div class="msg-info-top">
-                                <span class="msg-name">영은수 검사님</span>
-                                <span class="msg-date">›</span>
-                            </div>
-                            <div class="msg-preview" id="preview-eunsoo"></div>
                         </div>
                     </div>
 
@@ -1206,6 +1402,19 @@
                                 <span class="msg-date">›</span>
                             </div>
                             <div class="msg-preview" id="preview-dongjae"></div>
+                        </div>
+                    </div>
+
+                    <!-- 영은수 검사님 (가장 아래로 이동) -->
+                    <div class="msg-row" onclick="openChatRoom('eunsoo')">
+                        <div class="unread-dot read"></div>
+                        <div class="msg-avatar" style="background: linear-gradient(135deg, #a855f7, #6366f1);">은수</div>
+                        <div class="msg-info">
+                            <div class="msg-info-top">
+                                <span class="msg-name">영은수 검사님</span>
+                                <span class="msg-date">›</span>
+                            </div>
+                            <div class="msg-preview" id="preview-eunsoo"></div>
                         </div>
                     </div>
                 </div>
@@ -1248,7 +1457,47 @@
             </div>
         </div>
 
-        <!-- ================= 앱 3: 메모 (비어있음) ================= -->
+        <!-- ================= 앱 3: 카메라 (현실 아이폰 인터페이스 + 중앙 다람쥐 + 촬영 모션) ================= -->
+        <div id="app-camera" class="app-modal">
+            <div class="cam-top-bar">
+                <div class="cam-top-icon" onclick="playSound('click')">⚡</div>
+                <div class="cam-top-icon" style="font-size:12px; border:1px solid rgba(255,255,255,0.4);" onclick="playSound('click')">⌃</div>
+                <div class="cam-top-icon" onclick="closeApp('camera')" style="font-size:14px; color:#ffcc00; font-weight:600; width:auto;">닫기</div>
+            </div>
+
+            <div class="cam-viewfinder" onclick="triggerFocusBox()">
+                <div class="cam-grid-lines"></div>
+                <div class="cam-focus-box" id="cam-focus"></div>
+                <div class="cam-subject" id="cam-squirrel">🐿️</div>
+                <div class="cam-shutter-flash" id="cam-flash-overlay"></div>
+
+                <div class="cam-zoom-bar">
+                    <div class="cam-zoom-pill" onclick="setCamZoom(0.7, this)">.5</div>
+                    <div class="cam-zoom-pill active" onclick="setCamZoom(1, this)">1x</div>
+                    <div class="cam-zoom-pill" onclick="setCamZoom(1.35, this)">2</div>
+                    <div class="cam-zoom-pill" onclick="setCamZoom(1.7, this)">3</div>
+                </div>
+            </div>
+
+            <div class="cam-bottom-panel">
+                <div class="cam-modes">
+                    <span>시네마틱</span>
+                    <span>비디오</span>
+                    <span class="active">사진</span>
+                    <span>인물 사진</span>
+                    <span>파노라마</span>
+                </div>
+                <div class="cam-shutter-row">
+                    <div class="cam-thumb-box" id="cam-thumb"></div>
+                    <div class="cam-shutter-outer" onclick="takePhoto()">
+                        <div class="cam-shutter-inner"></div>
+                    </div>
+                    <div class="cam-flip-btn" onclick="flipCamera(this)">🔄</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 앱 4: 메모 (비어있음) ================= -->
         <div id="app-notes" class="app-modal">
             <div class="ios-nav-bar">
                 <span style="color:#ff9f0a; font-size:16px;">폴더</span>
@@ -1260,7 +1509,7 @@
             </div>
         </div>
 
-        <!-- ================= 앱 4: 설정 ================= -->
+        <!-- ================= 앱 5: 설정 ================= -->
         <div id="app-settings" class="app-modal">
             <div class="sub-view" id="settings-main-view">
                 <div class="msg-list-header">
@@ -1361,7 +1610,7 @@
             </div>
         </div>
 
-        <!-- ================= 앱 5: 전화 ================= -->
+        <!-- ================= 앱 6: 전화 (단장님 최다 통화 & 영은수 삭제) ================= -->
         <div id="app-phone" class="app-modal">
             <div class="ios-nav-bar">
                 <span style="width:40px;"></span>
@@ -1371,6 +1620,15 @@
 
             <!-- 최근 기록 뷰 -->
             <div id="phone-recents-view" style="flex:1; overflow-y:auto;">
+                <!-- 단장님: 가장 많이 통화한 사람 -->
+                <div class="msg-row" onclick="startCall('단장님')">
+                    <div style="flex:1;">
+                        <div style="font-size:16px; font-weight:600; color:#ffffff;">단장님 (28)</div>
+                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 발신 및 수신 (48분)</div>
+                    </div>
+                    <span style="font-size:14px; color:#8e8e93;">오후 8:40 ⓘ</span>
+                </div>
+                <!-- 이은빈 검사님 -->
                 <div class="msg-row" onclick="startCall('이은빈 검사님')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ffffff;">이은빈 검사님</div>
@@ -1378,13 +1636,15 @@
                     </div>
                     <span style="font-size:14px; color:#8e8e93;">오후 6:12 ⓘ</span>
                 </div>
-                <div class="msg-row" onclick="startCall('영은수 검사님')">
+                <!-- 단장님 이전 통화 기록 -->
+                <div class="msg-row" onclick="startCall('단장님')">
                     <div style="flex:1;">
-                        <div style="font-size:16px; font-weight:600; color:#ffffff;">영은수 검사님</div>
-                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 수신</div>
+                        <div style="font-size:16px; font-weight:600; color:#ffffff;">단장님 (15)</div>
+                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 수신 (1시간 12분)</div>
                     </div>
-                    <span style="font-size:14px; color:#8e8e93;">오후 5:30 ⓘ</span>
+                    <span style="font-size:14px; color:#8e8e93;">오후 5:15 ⓘ</span>
                 </div>
+                <!-- 서동재 검사 -->
                 <div class="msg-row" onclick="startCall('서동재 검사')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ff3b30;">서동재 검사 (3)</div>
@@ -1392,6 +1652,15 @@
                     </div>
                     <span style="font-size:14px; color:#8e8e93;">오후 4:05 ⓘ</span>
                 </div>
+                <!-- 단장님 어제 통화 기록 -->
+                <div class="msg-row" onclick="startCall('단장님')">
+                    <div style="flex:1;">
+                        <div style="font-size:16px; font-weight:600; color:#ffffff;">단장님 (19)</div>
+                        <div style="font-size:13px; color:#8e8e93;">휴대전화 • 발신 (35분)</div>
+                    </div>
+                    <span style="font-size:14px; color:#8e8e93;">어제 ⓘ</span>
+                </div>
+                <!-- 황시목 검사 -->
                 <div class="msg-row" onclick="startCall('황시목 검사')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ffffff;">황시목 검사</div>
@@ -1399,6 +1668,7 @@
                     </div>
                     <span style="font-size:14px; color:#8e8e93;">어제 ⓘ</span>
                 </div>
+                <!-- 장건 형사 -->
                 <div class="msg-row" onclick="startCall('장건 형사')">
                     <div style="flex:1;">
                         <div style="font-size:16px; font-weight:600; color:#ffffff;">장건 형사</div>
@@ -1425,7 +1695,7 @@
                     <button class="key" style="background:#2c2c2e;" onclick="dialNum('0')"><span class="num">0</span></button>
                     <button class="key" style="background:#2c2c2e;" onclick="dialNum('#')"><span class="num">#</span></button>
                 </div>
-                <button onclick="startCall(document.getElementById('dial-display').innerText || '이은빈 검사님')" style="margin-top:20px; width:72px; height:72px; border-radius:50%; background:#34c759; border:none; display:flex; justify-content:center; align-items:center; cursor:pointer;">
+                <button onclick="startCall(document.getElementById('dial-display').innerText || '발신 번호')" style="margin-top:20px; width:72px; height:72px; border-radius:50%; background:#34c759; border:none; display:flex; justify-content:center; align-items:center; cursor:pointer;">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
                 </button>
             </div>
@@ -1446,11 +1716,11 @@
                 <div style="font-size:32px; font-weight:600;" id="calling-name">이은빈 검사님</div>
             </div>
             <button onclick="endCall()" style="width:74px; height:74px; border-radius:50%; background:#ff3b30; border:none; display:flex; justify-content:center; align-items:center; cursor:pointer;">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1-.29-.7c0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11-.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1-.29-.7c0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
             </button>
         </div>
 
-        <!-- ================= 앱 6: Instagram ================= -->
+        <!-- ================= 앱 7: Instagram ================= -->
         <div id="app-instagram" class="app-modal">
             <div class="ios-nav-bar" style="background:#000000;">
                 <span style="font-size:21px; font-weight:700; font-style:italic; letter-spacing:-0.5px;">Instagram</span>
@@ -1523,6 +1793,15 @@
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
                     osc.start(now);
                     osc.stop(now + 0.035);
+                } else if (type === 'shutter') {
+                    // 아이폰 카메라 찰칵 소리
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(1100, now);
+                    osc.frequency.setValueAtTime(650, now + 0.04);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                    osc.start(now);
+                    osc.stop(now + 0.09);
                 } else if (type === 'unlock') {
                     osc.frequency.setValueAtTime(440, now);
                     osc.frequency.exponentialRampToValueAtTime(880, now + 0.14);
@@ -1562,6 +1841,11 @@
             e.stopPropagation();
             playSound('click');
             document.getElementById('flashlight-btn').classList.toggle('flashlight-active');
+        }
+
+        function openCameraFromLock(e) {
+            e.stopPropagation();
+            openApp('camera');
         }
 
         // 잠금화면 위로 쓸어올리기
@@ -1642,17 +1926,60 @@
             document.querySelectorAll('.app-modal').forEach(m => m.classList.remove('open'));
         }
 
-        // ================= 메시지 데이터 (이은빈 떡볶이 문자 외 모두 비움 + 영은수 추가) =================
+        // ================= 카메라 앱 동작 =================
+        function takePhoto() {
+            playSound('shutter');
+            const flash = document.getElementById('cam-flash-overlay');
+            const squirrel = document.getElementById('cam-squirrel');
+            const thumb = document.getElementById('cam-thumb');
+
+            flash.classList.remove('flash-anim');
+            void flash.offsetWidth; // reflow
+            flash.classList.add('flash-anim');
+
+            squirrel.style.transform = 'scale(0.92)';
+            setTimeout(() => {
+                squirrel.style.transform = 'scale(1)';
+                thumb.innerText = '🐿️';
+                thumb.style.transform = 'scale(1.15)';
+                setTimeout(() => { thumb.style.transform = 'scale(1)'; }, 180);
+            }, 130);
+        }
+
+        function setCamZoom(scale, el) {
+            playSound('click');
+            document.querySelectorAll('.cam-zoom-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('cam-squirrel').style.transform = `scale(${scale})`;
+        }
+
+        function triggerFocusBox() {
+            playSound('click');
+            const box = document.getElementById('cam-focus');
+            box.style.transform = 'scale(1.25)';
+            box.style.opacity = '1';
+            setTimeout(() => {
+                box.style.transform = 'scale(1)';
+                box.style.opacity = '0.85';
+            }, 180);
+        }
+
+        let camFlipped = false;
+        function flipCamera(btn) {
+            playSound('click');
+            camFlipped = !camFlipped;
+            btn.style.transform = camFlipped ? 'rotate(180deg)' : 'rotate(0deg)';
+            const squirrel = document.getElementById('cam-squirrel');
+            squirrel.style.transform = camFlipped ? 'scaleX(-1)' : 'scaleX(1)';
+        }
+
+        // ================= 메시지 데이터 =================
         const chatData = {
             eunbin: {
                 name: "이은빈 검사님",
                 messages: [
                     { sender: "them", text: "경감님, 떡볶이 먹으러 가실래요?" }
                 ]
-            },
-            eunsoo: {
-                name: "영은수 검사님",
-                messages: []
             },
             shimok: {
                 name: "황시목 검사",
@@ -1664,6 +1991,10 @@
             },
             dongjae: {
                 name: "서동재 검사",
+                messages: []
+            },
+            eunsoo: {
+                name: "영은수 검사님",
                 messages: []
             }
         };
@@ -1722,7 +2053,7 @@
             renderChatMessages();
         }
 
-        // ================= 설정 앱 인터랙션 (이은빈 관련 문구 제거) =================
+        // ================= 설정 앱 인터랙션 =================
         function toggleSwitch(el) {
             playSound('click');
             el.classList.toggle('on');
@@ -1853,7 +2184,7 @@
             document.getElementById('settings-detail-view').classList.add('slide-right');
         }
 
-        // ================= 전화 앱 & 이은빈 검사님 통화 연출 =================
+        // ================= 전화 앱 & 통화 연출 =================
         let callTimeouts = [];
         let callTimerInterval = null;
 
@@ -1881,6 +2212,15 @@
             if (disp.innerText.length < 13) disp.innerText += n;
         }
 
+        function showNarrationLine(text) {
+            const narrationEl = document.getElementById('call-narration');
+            narrationEl.classList.remove('show');
+            callTimeouts.push(setTimeout(() => {
+                narrationEl.innerText = text;
+                narrationEl.classList.add('show');
+            }, 500));
+        }
+
         function startCall(name) {
             clearCallTimers();
             playSound('unlock');
@@ -1889,12 +2229,13 @@
             const narrationEl = document.getElementById('call-narration');
             document.getElementById('calling-name').innerText = name;
             statusEl.innerText = "통화 연결 중...";
+            statusEl.style.color = "#94a3b8";
             narrationEl.classList.remove('show');
             narrationEl.innerText = "";
 
             document.getElementById('call-overlay').classList.add('active');
 
-            // 이은빈 검사님에게 걸었을 때 연출 (3초 뒤 수신 -> 나레이션 2줄 느리게 -> 5초 뒤 종료)
+            // 1. 이은빈 검사님에게 걸었을 때 연출
             if (name.includes('이은빈')) {
                 // 3초 뒤 전화 받음
                 callTimeouts.push(setTimeout(() => {
@@ -1906,24 +2247,43 @@
                         statusEl.innerText = `00:${String(sec).padStart(2, '0')}`;
                     }, 1000);
 
-                    // 첫 번째 나레이션: “… 여보세요?”
+                    // 대사 1: “… 여보세요?”
                     narrationEl.innerText = "“… 여보세요?”";
                     narrationEl.classList.add('show');
 
-                    // 느리게 두 번째 나레이션으로 전환
+                    // 대사 2: “…… 경감님, 무슨 일이세요?”
                     callTimeouts.push(setTimeout(() => {
-                        narrationEl.classList.remove('show');
-                        callTimeouts.push(setTimeout(() => {
-                            narrationEl.innerText = "“…… 경감님, 무슨 일이세요?”";
-                            narrationEl.classList.add('show');
-                        }, 600));
-                    }, 2000));
+                        showNarrationLine("“…… 경감님, 무슨 일이세요?”");
+                    }, 2800));
 
-                    // 통화 연결된 지 5초 뒤 자동으로 끊김
+                    // 대사 3: “… 제 말에는 답장 안 해주실 거예요?”
+                    callTimeouts.push(setTimeout(() => {
+                        showNarrationLine("“… 제 말에는 답장 안 해주실 거예요?”");
+                    }, 6000));
+
+                    // 대사 4: “… 아니에요, 잊어 주세요.”
+                    callTimeouts.push(setTimeout(() => {
+                        showNarrationLine("“… 아니에요, 잊어 주세요.”");
+                    }, 9500));
+
+                    // 마지막 대사 후 5초 뒤 통화 끊김
                     callTimeouts.push(setTimeout(() => {
                         endCall();
-                    }, 5000));
+                    }, 14500));
                 }, 3000));
+            } else {
+                // 2. 이은빈 검사님 제외 모든 번호: 5초 뒤 전화를 받지 않는다고 뜨고 끊김
+                callTimeouts.push(setTimeout(() => {
+                    playSound('error');
+                    statusEl.innerText = "전화를 받지 않습니다";
+                    statusEl.style.color = "#ff453a";
+                    narrationEl.innerText = "상대방이 전화를 받지 않아 연결이 종료됩니다.";
+                    narrationEl.classList.add('show');
+
+                    callTimeouts.push(setTimeout(() => {
+                        endCall();
+                    }, 1600));
+                }, 5000));
             }
         }
 
@@ -1935,7 +2295,7 @@
             document.getElementById('call-status-text').innerText = "통화 종료";
             setTimeout(() => {
                 document.getElementById('call-overlay').classList.remove('active');
-            }, 400);
+            }, 450);
         }
 
         // ================= 인스타그램 하트 토글 =================
