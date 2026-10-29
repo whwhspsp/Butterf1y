@@ -1520,13 +1520,13 @@
 
                 <div style="flex:1; overflow-y:auto; padding:12px 16px;">
                     <div style="background:#1c1c1e; border-radius:12px; overflow:hidden;">
-                        <!-- ♡ Read Me ♡ 메모 항목 (클릭 가능) -->
+                        <!-- ♡ Read Me ♡ 메모 항목 (미리보기: read me) -->
                         <div class="msg-row" style="padding:13px 16px; cursor:pointer;" onclick="openNoteDetail()">
                             <div style="flex:1;">
                                 <div style="font-size:16px; font-weight:600; color:#ffffff; margin-bottom:3px;">♡ Read Me ♡</div>
                                 <div style="font-size:13.5px; color:#8e8e93; display:flex; gap:8px;">
                                     <span>오후 9:41</span>
-                                    <span>추가 텍스트 없음</span>
+                                    <span style="color:#a1a1a6;">read me</span>
                                 </div>
                             </div>
                             <span class="chevron" style="color:#5c5c5e; font-size:15px;">›</span>
@@ -1548,9 +1548,18 @@
                 </div>
                 <div style="flex:1; overflow-y:auto; padding:20px 20px 40px; display:flex; flex-direction:column;">
                     <div style="font-size:13px; color:#8e8e93; text-align:center; margin-bottom:16px;" id="note-date-display">10월 29일 오후 9:41</div>
-                    <div style="font-size:24px; font-weight:700; color:#ffffff; margin-bottom:14px;">♡ Read Me ♡</div>
-                    <!-- 내용은 아직 넣지 않고 빈 상태로 대기 -->
-                    <div style="flex:1; outline:none; font-size:16px; color:#ffffff; line-height:1.6; min-height:220px;" contenteditable="true"></div>
+                    <div style="font-size:24px; font-weight:700; color:#ffffff; margin-bottom:18px;">♡ Read Me ♡</div>
+                    
+                    <!-- 노션 스타일 토글 목록 (누르면 펼쳐져서 내용 표시) -->
+                    <div style="background:#1c1c1e; border-radius:12px; padding:12px 14px; margin-bottom:14px;">
+                        <div onclick="toggleNotionBlock(this)" style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
+                            <span id="notion-toggle-arrow" style="font-size:11px; color:#ff9f0a; transition:transform 0.2s ease; display:inline-block;">▶</span>
+                            <span style="font-size:16px; font-weight:600; color:#ffffff;">read me</span>
+                        </div>
+                        <div id="notion-toggle-body" style="display:none; padding-top:12px; padding-left:18px; border-left:1.5px solid rgba(255,159,10,0.3); margin-top:8px; margin-left:4px;">
+                            <div id="notion-content-area" style="font-size:14.5px; color:#e5e5ea; line-height:1.6; outline:none; min-height:80px; white-space:pre-wrap;" contenteditable="true" placeholder="내용을 붙여넣으세요..."></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2378,6 +2387,22 @@
         }
 
         // ================= 메모 앱 인터랙션 =================
+        // ================= 노션 토글 목록 토글 기능 =================
+        function toggleNotionBlock(el) {
+            playSound('click');
+            const arrow = document.getElementById('notion-toggle-arrow');
+            const body = document.getElementById('notion-toggle-body');
+            const isOpen = body.style.display === 'block';
+
+            if (isOpen) {
+                body.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                body.style.display = 'block';
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+
         function openNoteDetail() {
             playSound('click');
             document.getElementById('notes-detail-view').classList.remove('slide-right');
